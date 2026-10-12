@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusTrack — Sign In</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="auth-layout">
+        <div class="auth-brand">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>FocusTrack</span>
+                </div>
+                <h1>Master your focus.<br>Elevate your learning.</h1>
+                <p class="brand-desc">AI-powered study sessions, real-time analytics, and intelligent burnout prevention — everything you need to study smarter.</p>
+                <div class="brand-features">
+                    <div class="feature-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>Smart Pomodoro Timer</span></div>
+                    <div class="feature-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span>AI Study Assistant</span></div>
+                    <div class="feature-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Detailed Analytics</span></div>
+                    <div class="feature-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg><span>Burnout Prevention</span></div>
+                </div>
+            </div>
+            <div class="brand-footer">FocusTrack v2.0</div>
+        </div>
+
+        <div class="auth-form-section">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2 id="authTitle">Welcome back</h2>
+                    <p id="authSubtitle">Sign in to your account to continue</p>
+                </div>
+
+                <div id="errorMsg" class="auth-error" style="display:none"></div>
+
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginUser">Username or Email</label>
+                        <input type="text" id="loginUser" class="form-input" placeholder="Enter your username or email" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPass">Password</label>
+                        <input type="password" id="loginPass" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" id="loginBtn">Sign In</button>
+                </form>
+
+                <form id="registerForm" onsubmit="handleRegister(event)" style="display:none">
+                    <div class="form-group">
+                        <label for="regName">Full Name</label>
+                        <input type="text" id="regName" class="form-input" placeholder="Your full name" autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="regUser">Username</label>
+                        <input type="text" id="regUser" class="form-input" placeholder="Choose a username" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email</label>
+                        <input type="email" id="regEmail" class="form-input" placeholder="your@email.com" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPass">Password</label>
+                        <input type="password" id="regPass" class="form-input" placeholder="Min 6 characters" required minlength="6" autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" id="regBtn">Create Account</button>
+                </form>
+
+                <div class="auth-toggle">
+                    <span id="toggleText">Don't have an account?</span>
+                    <button type="button" class="btn-link" id="toggleBtn" onclick="toggleAuthMode()">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var isLogin = true;
+
+    function toggleAuthMode() {
+        isLogin = !isLogin;
+        document.getElementById('loginForm').style.display = isLogin ? '' : 'none';
+        document.getElementById('registerForm').style.display = isLogin ? 'none' : '';
+        document.getElementById('authTitle').textContent = isLogin ? 'Welcome back' : 'Create your account';
+        document.getElementById('authSubtitle').textContent = isLogin ? 'Sign in to your account to continue' : 'Start tracking your focus journey';
+        document.getElementById('toggleText').textContent = isLogin ? "Don't have an account?" : 'Already have an account?';
+        document.getElementById('toggleBtn').textContent = isLogin ? 'Sign Up' : 'Sign In';
+        hideError();
+    }
+
+    function showError(msg) {
+        var el = document.getElementById('errorMsg');
+        el.textContent = msg;
+        el.style.display = '';
+    }
+    function hideError() { document.getElementById('errorMsg').style.display = 'none'; }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        hideError();
+        var btn = document.getElementById('loginBtn');
+        btn.disabled = true; btn.textContent = 'Signing in...';
+        try {
+            var res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login: document.getElementById('loginUser').value, password: document.getElementById('loginPass').value })
+            });
+            var data = await res.json();
+            if (!res.ok) throw new Error(data.error);
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            window.location.href = '/';
+        } catch (err) {
+            showError(err.message);
+        }
+        btn.disabled = false; btn.textContent = 'Sign In';
+    }
+
+    async function handleRegister(e) {
+        e.preventDefault();
+        hideError();
+        var btn = document.getElementById('regBtn');
+        btn.disabled = true; btn.textContent = 'Creating account...';
+        try {
+            var res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: document.getElementById('regUser').value,
+                    email: document.getElementById('regEmail').value,
+                    password: document.getElementById('regPass').value,
+                    full_name: document.getElementById('regName').value
+                })
+            });
+            var data = await res.json();
+            if (!res.ok) throw new Error(data.error);
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            window.location.href = '/';
+        } catch (err) {
+            showError(err.message);
+        }
+        btn.disabled = false; btn.textContent = 'Create Account';
+    }
+
+    // Redirect if already logged in
+    if (localStorage.getItem('token')) window.location.href = '/';
+    </script>
+</body>
+</html>

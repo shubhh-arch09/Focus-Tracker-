@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id="particles"></canvas>
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <div class="topbar-brand">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>FocusTrack</span>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <div class="user-menu" id="userMenu">
+                <button class="user-avatar" id="userAvatarBtn">
+                    <span id="userInitials">U</span>
+                </button>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-user-info">
+                        <div class="dropdown-avatar" id="dropdownAvatar">U</div>
+                        <div>
+                            <div class="dropdown-name" id="dropdownName">User</div>
+                            <div class="dropdown-role" id="dropdownRole">user</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="navigateTo('profile')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</button>
+                    <button class="dropdown-item" id="adminBtn" style="display:none" onclick="navigateTo('admin')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin Panel</button>
+                    <button class="dropdown-item" onclick="toggleTheme()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>Toggle Theme</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item danger" onclick="logout()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="nav-links">
+            <a href="#" class="nav-link active" data-view="dashboard">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-link" data-view="timer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>Focus Timer</span>
+            </a>
+            <a href="#" class="nav-link" data-view="sessions">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>Sessions</span>
+            </a>
+            <a href="#" class="nav-link" data-view="subjects">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+                <span>Subjects</span>
+            </a>
+            <a href="#" class="nav-link" data-view="achievements">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>Achievements</span>
+            </a>
+            <a href="#" class="nav-link" data-view="statistics">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <span>Statistics</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- DASHBOARD -->
+        <section class="view active" id="view-dashboard">
+            <div class="view-header">
+                <div><h1>Dashboard</h1><p class="subtitle" id="dashboardDate"></p></div>
+            </div>
+            <div class="quote-banner" id="quoteBanner"></div>
+            <div class="daily-goal-bar">
+                <div class="goal-info"><span>Daily Goal</span><span class="goal-numbers" id="goalNumbers">0 / 120 min</span></div>
+                <div class="goal-track"><div class="goal-fill" id="goalFill" style="width:0%"></div></div>
+                <button class="btn btn-sm btn-ghost" onclick="openGoalModal()">Set Goal</button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#4f46e5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                    <div class="stat-info"><div class="stat-label">Today's Focus</div><div class="stat-value" id="statTodayTime">0m</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#10b981"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                    <div class="stat-info"><div class="stat-label">Sessions Today</div><div class="stat-value" id="statTodayCount">0</div></div>
+                </div>
+                <div class="stat-card accent">
+                    <div class="stat-icon" style="background:#f59e0b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                    <div class="stat-info"><div class="stat-label">Focus Streak</div><div class="stat-value" id="statStreak">0 days</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#ec4899"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+                    <div class="stat-info"><div class="stat-label">Total Sessions</div><div class="stat-value" id="statTotalSessions">0</div></div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="card burnout-card">
+                    <h3>Burnout Risk</h3>
+                    <div class="burnout-display">
+                        <div class="burnout-ring-container" id="burnoutRing"></div>
+                        <div class="burnout-info"><span class="burnout-level" id="burnoutLevel">Low</span><p class="burnout-message" id="burnoutMessage">Healthy balance.</p></div>
+                    </div>
+                    <div class="burnout-factors" id="burnoutFactors"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3>Recent Sessions</h3><button class="btn-link" onclick="navigateTo('sessions')">View all</button></div>
+                    <div class="recent-sessions" id="recentSessions"></div>
+                </div>
+                <div class="card"><h3>Today by Subject</h3><div class="chart-container" id="dashboardSubjectChart"></div></div>
+            </div>
+        </section>
+
+        <!-- TIMER -->
+        <section class="view" id="view-timer">
+            <div class="view-header"><h1>Focus Timer</h1></div>
+            <div class="timer-layout">
+                <div class="timer-main">
+                    <div class="timer-mode-tabs">
+                        <button class="tab-btn active" data-mode="focus">Focus</button>
+                        <button class="tab-btn" data-mode="pomodoro">Pomodoro</button>
+                    </div>
+                    <div class="timer-presets" id="timerPresets">
+                        <button class="preset-btn active" data-min="15">15m</button>
+                        <button class="preset-btn" data-min="25">25m</button>
+                        <button class="preset-btn" data-min="30">30m</button>
+                        <button class="preset-btn" data-min="45">45m</button>
+                        <button class="preset-btn" data-min="60">60m</button>
+                        <button class="preset-btn" data-min="90">90m</button>
+                        <div class="preset-custom"><input type="number" id="customMinutes" min="1" max="180" placeholder="Custom"></div>
+                    </div>
+                    <div class="countdown-overlay" id="countdownOverlay"><div class="countdown-number" id="countdownNumber">3</div></div>
+                    <div class="timer-ring-wrapper">
+                        <svg class="timer-ring" viewBox="0 0 280 280">
+                            <defs>
+                                <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#4f46e5"/><stop offset="100%" style="stop-color:#7c3aed"/></linearGradient>
+                                <linearGradient id="breakGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#10b981"/><stop offset="100%" style="stop-color:#34d399"/></linearGradient>
+                            </defs>
+                            <circle class="ring-bg" cx="140" cy="140" r="126" fill="none" stroke-width="8"/>
+                            <circle class="ring-progress" id="timerProgress" cx="140" cy="140" r="126" fill="none" stroke="url(#timerGrad)" stroke-width="8" stroke-dasharray="791.68" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 140 140)"/>
+                        </svg>
+                        <div class="timer-display">
+                            <div class="timer-time" id="timerDisplay">15:00</div>
+                            <div class="timer-label" id="timerLabel">Pick a duration & start</div>
+                        </div>
+                    </div>
+                    <div class="timer-controls">
+                        <button class="btn btn-primary btn-lg" id="btnStart" onclick="startTimer()">Start Focus</button>
+                        <button class="btn btn-secondary btn-lg" id="btnPause" onclick="pauseTimer()" style="display:none">Pause</button>
+                        <button class="btn btn-danger btn-lg" id="btnStop" onclick="stopTimer()" style="display:none">Stop</button>
+                        <button class="btn btn-accent btn-lg" id="btnResume" onclick="resumeTimer()" style="display:none">Resume</button>
+                    </div>
+                    <div class="pomodoro-info" id="pomodoroInfo" style="display:none">
+                        <div class="pom-dots" id="pomDots"><span class="pom-dot active"></span><span class="pom-dot"></span><span class="pom-dot"></span><span class="pom-dot"></span></div>
+                        <span>Cycle <strong id="pomCycle">1</strong>/4 &middot; <strong id="pomPhase">Focus</strong></span>
+                    </div>
+                </div>
+                <div class="timer-sidebar">
+                    <div class="card"><h3>Subject</h3><select class="form-select" id="timerSubject"><option value="">Select a subject...</option></select></div>
+                    <div class="card">
+                        <h3>Ambient Sounds</h3>
+                        <div class="ambient-controls">
+                            <button class="ambient-btn" data-sound="rain" onclick="toggleAmbientSound('rain')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg><span>Rain</span></button>
+                            <button class="ambient-btn" data-sound="forest" onclick="toggleAmbientSound('forest')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 14l3-6h-6l3-6H7l-3 14h6l-2 8z"/></svg><span>Forest</span></button>
+                            <button class="ambient-btn" data-sound="waves" onclick="toggleAmbientSound('waves')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 18c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/></svg><span>Waves</span></button>
+                        </div>
+                        <div class="volume-control"><label>Volume</label><input type="range" id="ambientVolume" min="0" max="100" value="30"></div>
+                    </div>
+                    <div class="card"><h3>Session Notes</h3><textarea class="form-textarea" id="timerNotes" placeholder="What are you working on?"></textarea></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SESSIONS -->
+        <section class="view" id="view-sessions">
+            <div class="view-header">
+                <h1>Session History</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="exportToCSV()">Export CSV</button>
+                    <button class="btn btn-primary" onclick="openSessionModal()">+ Log Session</button>
+                </div>
+            </div>
+            <div class="filter-bar">
+                <select class="form-select" id="filterSubject" onchange="applyFilters()"><option value="">All Subjects</option></select>
+                <input type="date" class="form-input" id="filterDate" onchange="applyFilters()">
+                <button class="btn btn-link" onclick="clearFilters()">Clear</button>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>Subject</th><th>Duration</th><th>Type</th><th>Rating</th><th>Notes</th><th></th></tr></thead>
+                    <tbody id="sessionsTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="sessionsEmpty" style="display:none"><p>No sessions recorded yet.</p></div>
+            </div>
+        </section>
+
+        <!-- SUBJECTS -->
+        <section class="view" id="view-subjects">
+            <div class="view-header"><h1>Study Subjects</h1></div>
+            <div class="subjects-grid" id="subjectsGrid"></div>
+            <div class="subject-detail" id="subjectDetail" style="display:none">
+                <button class="btn btn-link back-btn" onclick="closeSubjectDetail()">&larr; Back to subjects</button>
+                <div class="subject-detail-header" id="subjectDetailHeader"></div>
+                <div class="subject-tabs">
+                    <button class="tab-btn active" data-tab="videos" onclick="switchSubjectTab('videos')">Video Lectures</button>
+                    <button class="tab-btn" data-tab="notes" onclick="switchSubjectTab('notes')">Notes</button>
+                </div>
+                <div class="subject-tab-content" id="subjectTabContent">
+                    <div class="tab-panel active" id="panel-videos"></div>
+                    <div class="tab-panel" id="panel-notes"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACHIEVEMENTS -->
+        <section class="view" id="view-achievements">
+            <div class="view-header"><h1>Achievements</h1></div>
+            <div class="achievements-grid" id="achievementsGrid"></div>
+        </section>
+
+        <!-- STATISTICS -->
+        <section class="view" id="view-statistics">
+            <div class="view-header"><h1>Statistics</h1></div>
+            <div class="stats-tabs">
+                <button class="tab-btn active" onclick="showStatTab('daily')">Today</button>
+                <button class="tab-btn" onclick="showStatTab('weekly')">This Week</button>
+            </div>
+            <div class="stat-panel active" id="stat-daily">
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-info"><div class="stat-label">Total Time</div><div class="stat-value" id="dailyTotalTime">0m</div></div></div>
+                    <div class="stat-card"><div class="stat-info"><div class="stat-label">Sessions</div><div class="stat-value" id="dailySessionCount">0</div></div></div>
+                    <div class="stat-card"><div class="stat-info"><div class="stat-label">Avg Session</div><div class="stat-value" id="dailyAvgSession">0m</div></div></div>
+                </div>
+                <div class="card"><h3>Time by Subject</h3><div class="chart-container" id="dailySubjectChart"></div></div>
+            </div>
+            <div class="stat-panel" id="stat-weekly">
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-info"><div class="stat-label">Total Time</div><div class="stat-value" id="weeklyTotalTime">0m</div></div></div>
+                    <div class="stat-card"><div class="stat-info"><div class="stat-label">Sessions</div><div class="stat-value" id="weeklySessionCount">0</div></div></div>
+                    <div class="stat-card"><div class="stat-info"><div class="stat-label">Best Day</div><div class="stat-value" id="weeklyBestDay">-</div></div></div>
+                </div>
+                <div class="card"><h3>Daily Breakdown</h3><div class="chart-container" id="weeklyDailyChart"></div></div>
+                <div class="card"><h3>Subject Distribution</h3><div class="chart-container" id="weeklySubjectChart"></div></div>
+            </div>
+        </section>
+
+        <!-- PROFILE -->
+        <section class="view" id="view-profile">
+            <div class="view-header"><h1>Profile</h1></div>
+            <div class="profile-layout">
+                <div class="card profile-card">
+                    <div class="profile-avatar" id="profileAvatar">U</div>
+                    <h2 id="profileName">User</h2>
+                    <span class="role-badge" id="profileRole">user</span>
+                    <p class="profile-email" id="profileEmail">user@email.com</p>
+                    <p class="profile-joined" id="profileJoined">Joined: -</p>
+                </div>
+                <div class="card">
+                    <h3>Edit Profile</h3>
+                    <form id="profileForm" onsubmit="updateProfile(event)">
+                        <div class="form-group"><label>Full Name</label><input type="text" class="form-input" id="profileFullName"></div>
+                        <div class="form-group"><label>Email</label><input type="email" class="form-input" id="profileEmailInput"></div>
+                        <div class="form-group"><label>Current Password</label><input type="password" class="form-input" id="profileCurrentPass" placeholder="Required to change password"></div>
+                        <div class="form-group"><label>New Password</label><input type="password" class="form-input" id="profileNewPass" placeholder="Leave blank to keep current" minlength="6"></div>
+                        <div class="form-actions"><button type="submit" class="btn btn-primary">Save Changes</button></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN -->
+        <section class="view" id="view-admin">
+            <div class="view-header"><h1>Admin Panel</h1><p class="subtitle">Manage users and access levels</p></div>
+            <div class="card">
+                <h3>Users</h3>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
+                        <tbody id="adminUsersBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODALS -->
+    <div class="modal-overlay" id="sessionModal">
+        <div class="modal">
+            <div class="modal-header"><h2>Log a Session</h2><button class="btn-close" onclick="closeSessionModal()">&times;</button></div>
+            <form id="sessionForm" onsubmit="submitSession(event)">
+                <div class="form-group"><label>Subject *</label><select class="form-select" id="formSubject" required><option value="">Select subject</option></select></div>
+                <div class="form-group"><label>Duration (minutes) *</label><input type="number" class="form-input" id="formMinutes" min="1" max="600" value="30" required></div>
+                <div class="form-group"><label>Date *</label><input type="date" class="form-input" id="formDate" required></div>
+                <div class="form-group"><label>Type</label><select class="form-select" id="formType"><option value="focus">Focus</option><option value="break">Break</option><option value="review">Review</option><option value="practice">Practice</option></select></div>
+                <div class="form-group"><label>Rating</label><div class="rating-input" id="formRating"></div></div>
+                <div class="form-group"><label>Notes</label><textarea class="form-textarea" id="formNotes" placeholder="Optional notes..."></textarea></div>
+                <div class="form-actions"><button type="button" class="btn btn-secondary" onclick="closeSessionModal()">Cancel</button><button type="submit" class="btn btn-primary">Save Session</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="noteModal">
+        <div class="modal">
+            <div class="modal-header"><h2 id="noteModalTitle">Add Note</h2><button class="btn-close" onclick="closeNoteModal()">&times;</button></div>
+            <form id="noteForm" onsubmit="submitNote(event)">
+                <input type="hidden" id="noteId"><input type="hidden" id="noteSubjectId">
+                <div class="form-group"><label>Title *</label><input type="text" class="form-input" id="noteTitle" required></div>
+                <div class="form-group"><label>Content *</label><textarea class="form-textarea tall" id="noteContent" required></textarea></div>
+                <div class="form-actions"><button type="button" class="btn btn-secondary" onclick="closeNoteModal()">Cancel</button><button type="submit" class="btn btn-primary">Save Note</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="videoModal">
+        <div class="modal">
+            <div class="modal-header"><h2>Add Video Lecture</h2><button class="btn-close" onclick="closeVideoModal()">&times;</button></div>
+            <form id="videoForm" onsubmit="submitVideo(event)">
+                <input type="hidden" id="videoSubjectId">
+                <div class="form-group"><label>Title *</label><input type="text" class="form-input" id="videoTitle" required></div>
+                <div class="form-group"><label>YouTube Embed URL *</label><input type="url" class="form-input" id="videoUrl" placeholder="https://www.youtube.com/embed/..." required></div>
+                <div class="form-group"><label>Duration</label><input type="text" class="form-input" id="videoDuration" placeholder="e.g. 15:30"></div>
+                <div class="form-actions"><button type="button" class="btn btn-secondary" onclick="closeVideoModal()">Cancel</button><button type="submit" class="btn btn-primary">Add Video</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="goalModal">
+        <div class="modal small-modal">
+            <div class="modal-header"><h2>Set Daily Goal</h2><button class="btn-close" onclick="closeGoalModal()">&times;</button></div>
+            <form onsubmit="submitGoal(event)">
+                <div class="form-group"><label>Target (minutes)</label><input type="number" class="form-input" id="goalMinutes" min="10" max="600" value="120"></div>
+                <div class="form-actions"><button type="submit" class="btn btn-primary">Set Goal</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="ratingModal">
+        <div class="modal small-modal rating-modal">
+            <div class="confetti-container" id="confetti"></div>
+            <h2>Session Complete!</h2>
+            <p class="rating-subtitle" id="ratingSubtitle">Great work!</p>
+            <div class="rating-stars" id="ratingStars"></div>
+            <button class="btn btn-primary btn-lg" onclick="submitRating()">Save</button>
+        </div>
+    </div>
+
+    <!-- AI CHAT WIDGET -->
+    <button class="ai-fab" id="aiFab" onclick="toggleAIChat()" title="AI Study Assistant">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 017 7c0 3-2 5-4 6v2a1 1 0 01-1 1h-4a1 1 0 01-1-1v-2c-2-1-4-3-4-6a7 7 0 017-7z"/><line x1="10" y1="21" x2="14" y2="21"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+    </button>
+    <div class="ai-chat-panel" id="aiChatPanel">
+        <div class="ai-chat-header">
+            <div class="ai-chat-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 017 7c0 3-2 5-4 6v2a1 1 0 01-1 1h-4a1 1 0 01-1-1v-2c-2-1-4-3-4-6a7 7 0 017-7z"/><line x1="10" y1="21" x2="14" y2="21"/></svg><span>AI Study Assistant</span></div>
+            <button class="btn-close" onclick="toggleAIChat()">&times;</button>
+        </div>
+        <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="ai-msg bot">Hi! I'm your AI study assistant powered by Claude. Ask me anything about your subjects and I'll help clear your doubts.</div>
+        </div>
+        <form class="ai-chat-input" onsubmit="sendAIMessage(event)">
+            <input type="text" id="aiInput" placeholder="Ask a question..." autocomplete="off">
+            <button type="submit" class="btn btn-primary btn-sm">Send</button>
+        </form>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="js/script.js"></script>
+</body>
+</html>
